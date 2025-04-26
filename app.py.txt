@@ -1,0 +1,22 @@
+from flask import Flask, request, jsonify
+from pdf2image import convert_from_path
+import os
+
+app = Flask(__name__)
+
+@app.route('/convert-pdf-to-image', methods=['POST'])
+def convert_pdf_to_image():
+    file = request.files['pdf']
+    file.save("uploaded.pdf")
+    images = convert_from_path("uploaded.pdf")
+
+    image_paths = []
+    for i, image in enumerate(images):
+        image_path = f"output_image_{i}.png"
+        image.save(image_path, 'PNG')
+        image_paths.append(image_path)
+
+    return jsonify({"images": image_paths})
+
+if __name__ == "__main__":
+    app.run(debug=True)
