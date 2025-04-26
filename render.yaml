@@ -1,0 +1,8 @@
+services:
+  - type: web
+    name: convertpdf-backend
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app  # Gunicorn tells Render to look for app.py and start it
+    preDeployCommand: |
+      apt-get update && apt-get install -y poppler-utils  # For pdf2image to work correctly
